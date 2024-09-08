@@ -152,3 +152,206 @@ cd /tech
 ll
 
 --------------------------------------------------------------------------------------------
+
+CLOUD FORMATION------EC2 INSTANCE-----------------------
+Do in mumbai-- ----search cloud formation----click ----create stack----choose an existing temp ---upload template file----
+choose file (already downloaded ec2.yml) -----open file ---give key name as that we have in mumbai loc----save file
+cloud formation ---choose file---upload-----next-----stack name=st3----next---next----submit ---
+to check ---go to instances we can see the created instance
+----------------------------------------------------------------------------------------------------------------------------------
+
+S3BUCKET---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+go to aws---mumbai ----search for S3 bucket---------open S3
+create bucket -------bucketname=aws-test-8015----------ACLS enabled --------untick  block all public access -----
+------- tick  I acknowledge    create bucket ---------click on the bucket --------upload file -----add file ----upload
+
+go to myprofile----sec credentials---click---access keys---create access key ----i understand---create
+copy both access and secret key-----download.csv file
+
+go to ec2 instance--create inst-----s3-inst---aws---t2.micro---existing key----1a---enale auto assign---existing group---
+launch----connect to it--cmd --paste---sudo su -
+go to google---https://cloudkul.com/blog/mounting-s3-bucket-linux-ec2-instance/------
+copy all commands for centa os in cmd one by one------
+in step 7 ---(one step where we need to edit a file---vim something---paste access key:paste seret key
+
+in step 9---do only a) give ur bucketname instead of the one given in command
+
+df-h(check bucket created)
+
+10)cd/mys3bucket
+echo "this is a test filr" >>test.txt
+
+now u can see test.txt in s3 bucket
+search s3 bucket-----buckets----aniket.....-----obj
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+VPC PEERING-----------------------------
+
+AWS------Search VPC ---- your vpc ------creaye Vpc -----(default vpc is always present dont do anything to it ) -----test-vpc ----IPV4 CIDR =10.0.0.0/16----create vpc
+Internet gateways------create ----test-igw ----create----select it go to actions atach to test-vpc ----subnets ---creaste subnet ----slect vpc ---(test-vpc)
+-----subnet name=public-subnet -------avail zone --1a---subnet cidr block-----10.0.0.0/24 -----create
+
+
+create subnet ----private-subnet ------------------avail zone =1b (take diiff from 1st subnet)----subnet cidr block----10.0.1.0/24-------create
+create route table ------public-rt -------vpc=test-vpc----------create route table ----
+
+duplicate AWS ----ec2 ---launch instance----vpc-server------aws----t2.micro ----keypair existing (6Sep-sec)---- edit ----choose test-vpc---choose public subnet ----
+auto assign ---enable ----create sec group =vpc-sec------launch ---select vpc-server inst ----security groups----edit inbound rules ---add rule ---http  anyipv4  ---save
+
+config routev table ---------Route Tables---select public-rt ------routes----edit routs---add routes ----0.0.0.0/0 ---target =Internet gateway---select ....test-igw ----
+save -----subnet asso ----edit subnet asso ---public-subnet(select)--------save asso ----
+
+go to instance ---launch instance ----copy go to cd--------paste -----sudo su - --------yum install httpd -------cd /var/www/html/-----------
+echo "This is my vpc-public" > index.html --------cd --------systemctl start httpd -----systemctl enable httpd -------
+
+launch new instance-------db-server----aws----t2.micro----give same key as vpc-server ---vpc=test-vpc ---subnet ----private-subnet -----sec also samesec also same---
+auto assign public ip---disable-----launch----
+
+go to cd web-server---ip a s----copy inet of 2nd from 10 till / ----ping paste ip a s--------
+
+go to sec group ----select 6 sep ---eidt inbound rules----add ----All icmp ipv4 -----anywhere ipv4 ---save
+go to instances ---see key ---go to downloads ---open key in notepad----copy entire key -------go to cd vpc-server ------vim 6sep-sec(keyname).pem ----enter---paste key
+
+chmod 400 vim 6sep-sec(keyname).pem------connectv to db-server ----copy key -----paste in cmd of vpc-server -----(success) ---sudo su - ------yum install httpd - ---
+(not work as not connected to internet ,for this create a nat gateway)
+
+nat gateway -----create ----name=test-ngw ------select public subnet----public----allocate elastic ip----create ------go to route tables----create route table---
+private-rt -------test-vpc---create -----select private-rt -----routes ----edit routes- --add route --- 0.0.0.0/0 ---nat gateway --test-ngww---save--
+subnet asso ----edit ----private-subnet ---save asso ---resfresh  ------ go to cmd  ----(if disconnexted---then first copy ssh of web-server ---sudo su -
+---then ssh key of db-server ----sudo su - ---yum install httpd -) -----ping google.com  ----(success)
+
+
+for vpc peering follow same steps as above just in singapore loc and just at last connecting two vpcs
+
+
+now in both instance of mumbai and singapore (private  instances to be taken in both loc
+
+
+vim /etc/ssh/sshd_config --------se nu ----uncomment line 40 permitrootlogin yes----------passwordauthentication yes
+
+systemctl start shhd -----systemctl enable sshd ------
+
+do above same steps for singapore private instance cmd  -------
+
+after that do ssh-keygen in both ----------cd .ssh -----------ll-----------cat id_rsa.pub ----------copy the key ------(go to singa
+if we are in mumbai)  --------ssh-keygen (singapore) ----cd .ssh --ll -----vim authorized_keys-----paste the key of mumbai-----
+----copy public key of singapore and paste in mumbai
+ go to cmmd of both mubai and singa and write ping google.com so that machine doesnt get disconnected
+
+
+
+go to vpc (mumbai)-----peering connections ----- create ------mumbai-to-singa ------test-vpc -------another region
+----select region =singapore --- vpc id= (---go to singapore vpc ---your vpc ----copy vpc ID) paste  ---create
+go to singa ----go to peering connections ----selct it ---action---accept req---refresh --status-active
+
+go to route table (singa) ---singa-public-rt ----routes -----edit --add route ---10.0.0.0/16---peering connections ----select the next
+cell whhatever comes ===save
+
+go to route table (singa) ---singa-private-rt ----routes -----edit --add route ---10.0.0.0/16---peering connections ----select the next
+cell whhatever comes ===save
+
+go to route table (mumbai) ---private-rt ----routes -----edit --add route ---10.0.0.0/16---peering connections ----select the next
+cell whhatever comes ===save
+
+go to mumbai(route tables)---public-rt ---edit rooute --add route ---20.0.0.0/16 ---peering conn ----select cell with whatever comes
+
+save
+
+
+go to singapore instance cmd------select any one inst---copy public id ----ping paste
+
+
+sending file from singa to mumbai
+
+vim dracula.txt ---------i love drac----ll---scp dracula.txt root@private ip of mumbai: /tmp-------
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  CREATING CUSTOM AMI
+
+create instance in mumbai ---name:web-server---redhat----t2.small ---select existing key pair or create new ---subnet =1b -----sec group =existing or create new-----Launch
+instance
+
+select instance ----sec groups ----edit inbound rules ----http  ----custom ipv4----save rules------
+
+connect and go to cd-----
+
+rpmquery httpd
+yum install httpd -y
+cd /var/wwww/html/
+echo "This is My Dev-server on cloud "
+cat index.html
+systemctl start httpd
+
+systemctl status httpd
+systemctl enable httpd
+ip a s
+
+
+
+
+go to aws instance web-server ----stop instance-----again start instance and connect agqin----cd-----
+yum install vsftpd -y
+yum install cifs-utils -y
+yum install nfs-utils -y
+yum install tree -y
+cd /tmp/
+touch index.txt{1..100}
+cd /tmp/
+ll
+
+stop the instance-----actions ---img and templates----create img ---amis ---descr----IMAGE-----
+
+
+go to AMIS-----owned by me ---select amis----actions----launch instance from ami with same sec key  and subnet
+Create new instance with created custom ami
+
+While connecting via ssh, change root to ec2-user
+Copy public ip addr and check if it is shwoing content in index.html
+
+copy public ip of custom-instance -----go to google paste ip :80-----it shows echo statement that we put above
+
+
+cd /tmp
+ll
+
+
+migrate
+
+
+AWS dashboard>>select custom-ami
+
+Actions>>copy AMI
+
+Select Destination Region---singapore ---copy ami
+
+Go to destination region
+
+In AMIs you will be able to see, custom AMI copied
+
+Create new instance with custom AMI-------------select ami----launch instance with ami -----name =singa-------any key pair ---any sec group ----subnet any except c ---launch
+connect to singa ----cd-----when u paste just change root to ec2-user
+sudo su -
+cd /tmp
+ll
+
+to see it on google ----elect singa--------security----sec group ----edit ----http-----anywhere ipv4-----saved
+copy public ip :80 paste on google
+
+
+You will be able to see all the data inside it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
