@@ -1,0 +1,164 @@
+docker ps
+    2  docker ps -a
+    3  docker start wed-app
+    4  docker start web-app
+    5  docker attach web-app
+    6  curl
+http://172.17.0.1
+    7  curl
+http://172.17.0.3
+    8  ip a s
+    9  ds -a
+   10  dp -a
+   11  ds -a
+   12  docker attach web-app
+   13  docker satrt web-app
+   14  docker start web-app
+   15  docker enable web-app
+   16  docker attach web-app
+   17  docker ps -a
+   18  docker start web-app
+   19  docker attach web-app
+   20  curl
+http://172.17.0.3
+   21  curl
+http://172.17.0.1
+   22  ip a s
+   23  curl http//172.17.0.1
+   24  curl
+http://172.17.0.1
+   25  docker ps
+   26  docker run -it --name godfather ubuntu:latest /bin/bash
+   27  docker ps
+   28  docker ps -a
+   29  docekr start godfather
+   30  docker start godfather
+   31  docker attach godfather
+   32  docker ps
+   33  docker inspect ffa39006ecfc
+   34  curl
+http://172.17.0.2
+   35  docker run -it --name top-noch -p 8080:80 ubuntu:latest /bin/bash
+   36  ps
+   37  docker ps
+   38  docker inspect ffa39006ecfc
+   39  curl
+http://172.17.0.2
+   40  docker run -it --name web-app -p 3600:80 ubuntu:latest /bin/bash
+   41  docker run -it --name my-app -p 3600:80 ubuntu:latest /bin/bash
+   42  ps -a
+   43  docker ps -a
+   44  docker kill my-app
+   45  docker kill godfather
+   46  docker ps
+   47  docker volume ls
+   48  docker volume create my-vol
+   49  ls
+   50  docker volume ls
+   51  cd /var/lib/docker/volumes/
+   52  ll
+   53  cd my-vol/
+   54  ll
+   55  cd _data/
+   56  ls
+   57  cd
+   58  docker run -it --name data-app -p 2222:80 -y my-vol:/var/www/html ubuntu:latest /bin/bash
+   59  docker run -it --name data-app -p 2222:80 -v my-vol:/var/www/html ubuntu:latest /bin/bash
+   60  docker ps -a
+   61  cd /var/lib/docker/volumes/
+   62  ll
+   63  cd my-vol
+   64  ll
+   65  cd _data
+   66  ll
+   67  cat index.html
+   68  cd
+   69  docker ps -a
+   70  docker attach data-app
+   71  docker start data-app
+   72  docker attach data-app
+   73  cd /var/lib/docker/volumes/my-vol/_data/
+   74  ll
+   75  cat index.html
+   76  docker kill data-app
+   77  cd
+   78  docker kill data-app
+   79  docker start data-app
+   80  docker attach data-app
+   81  exit
+   82  yum install docker
+   83  yum repolist
+   84  yum install docker*
+   85  yum repolist
+   86  yum update -y
+   87  yum install docker*
+   88  yum repolist
+   89  docker info
+   90  rpmquery docker
+   91  systemctl start docker
+   92  systemctl enable docker
+   93  systemctl status docker
+   94  yum repolist
+   95  docker info
+   96  docker image
+   97  docker images
+   98  docker pull httpd
+   99  docker images
+  100  docker pull ubuntu
+  101  docker images
+  102  docker ps
+  103  docker ps -a
+  104  docker images
+  105  ip a s
+  106  docker run -it --name web-app ubuntu:latest /bin/bash
+  107  docker ps -a
+  108  rpmquery podman
+  109  ip a s
+  110  ping 172.17.0.1
+  111  curl
+http://172.17.0.1
+  112  ping 172.17.0.2
+  113  curl
+http://172.17.0.1
+  114  docker ds
+  115  docker ps
+  116  docker run -it --name aingle -p 2222:80 -v hulk:/var/www/html ubuntu:latest /bin/bash
+  117  docker run -it --name crush -p 2222:80 -v hulk:/var/www/html ubuntu:latest /bin/bash
+  118  docker start aingle
+  119  docker attach aingle
+  120  cd /var/lib/docker/volumes
+  121  ll
+  122  cd hulk
+  123  ll
+  124  cd _data
+  125  ll
+  126  cd ../
+  127  cd ..
+  128  cd my-vol
+  129  ll
+  130  cd _data
+  131  ll
+  132  cd
+  133  docker rename aingle darkdevil
+  134  docker run -it --name darkdevil -p 2222:80 -v hulk:/var/www/html ubuntu:latest /bin/bash
+  135  docker run -it --name fuck ubuntu:latest /bin/bash
+  136  docker ps
+  137*
+  138  docker run -it --name fuck -p 1111:80 ubuntu:latest /bin/bash
+  139  docker run -it --name butcher -p 2222:80 -v hulk:/var/www/html ubuntu:latest /bin/bash
+  140  docker kill butcher
+  141  docker volume dum
+  142  docker volume create dum
+  143  doucker volume ls
+  144  docker volume ls
+  145  docker run -it --name dummy -p 7070:80 -v dum:/var/www/html ubuntu:latest /bin/bash
+  146  docker kill dummy
+  147  docker ps
+  148  cd /var/www/html
+  149  cd /var/lib/docker/volumes
+  150  ll
+  151  cd dum
+  152  cd _data
+  153  ll
+  154  cat index.html
+  155  cd
